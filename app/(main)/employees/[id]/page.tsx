@@ -12,17 +12,17 @@ const HRProfile: React.FC = () => {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [counter, setCounter] = useState(0);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (clockedIn && startTime) {
-      timer = setInterval(() => {
-        setCounter(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
-      }, 1000);
-    } else {
-      clearInterval(timer);
-    }
-    return () => clearInterval(timer);
-  }, [clockedIn, startTime]);
+  // useEffect(() => {
+  //   let timer: NodeJS.Timeout ;
+  //   if (clockedIn && startTime) {
+  //     timer = setInterval(() => {
+  //       setCounter(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
+  //     }, 1000);
+  //   } else {
+  //     clearInterval(timer);
+  //   }
+  //   return () => clearInterval(timer);
+  // }, [clockedIn, startTime]);
 
   const handleClockIn = () => {
     setClockedIn(true);
