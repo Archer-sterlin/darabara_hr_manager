@@ -62,7 +62,7 @@ const HRProfile: React.FC = () => {
             </div>
             <div className="my-4 text-center text-slate-500 dark:text-slate-200">
               <h1 className="text-2xl font-bold">John Doe</h1>
-              <p className="text-sm">Software Engineer</p>
+              <p className="text-sm ml-auto">Software Engineer</p>
               <div className="flex gap-4 justify-center items-center my-4">
                 <button className="w-fit px-4 py-2 rounded-lg bg-cyan-700 text-white">
                   Upload Picture
