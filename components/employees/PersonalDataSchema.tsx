@@ -8,16 +8,12 @@ interface PersonalData{
         gender: string;
         date_of_birth: string;
         marital_status: string;
+        address: string;   
     };
-    
-    address:{
-        street: string;
-        country: string;
-        state: string;
-        postal_code: string;
-        town: string;
-        local_govt: string;
-    };
+    bank_info:{
+        bank_name: string;
+        bank_code: string;
+    }
     means_of_identification_type: string; 
     highest_qualification: string;
     linkedin_profile: string;

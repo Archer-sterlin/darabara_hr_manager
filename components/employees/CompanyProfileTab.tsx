@@ -1,4 +1,4 @@
-import Employee from "./CompanyProfileSchema";
+import Employee from "../../app/(main)/employees/components/CompanyProfileSchema";
 
 const CompanyProfileTab = ({ employee }: Employee) => {
     return ( 
