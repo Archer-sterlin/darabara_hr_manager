@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import ProfileForm from "../components/ProfileForm";
-import AddressForm from "../components/AddressForm";
 import BankInfoForm from "../components/BankInfoForm";
 import PasswordForm from "../components/PasswordForm";
 import Person from "@/img/kratos.png";
