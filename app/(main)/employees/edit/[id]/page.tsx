@@ -59,11 +59,10 @@ const EmployeeEditPage = ({ params }: EmployeeEditPageProp) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: employee?.name || '',
-      gender: employee?.gender || '',
-      email: employee?.email || '',
-      job_title: employee?.job_title || '',
-      department: employee?.department || '',
+      first_name: employee?.user?.first_name || '',
+      last_name: employee?.user?.last_name || '',
+      gender: employee?.user?.gender || '',
+      email: employee?.user?.email || '',
     },
   });
 
@@ -71,7 +70,7 @@ const EmployeeEditPage = ({ params }: EmployeeEditPageProp) => {
     console.log(data)
     toast({
       title: 'Profile has been updated successfully',
-      description: `Updated by ${employee?.name}`,
+      description: `Updated by ${employee?.user?.first_name}`,
     });
   };
 

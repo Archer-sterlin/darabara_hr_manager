@@ -2,21 +2,18 @@
 import React, { useState, ChangeEvent, MouseEvent } from "react";
 
 interface FormData {
-  fullName: string;
-  email: string;
-  phone: string;
-  mobile: string;
-  address: string;
+  bank_name: string;
+  bank_code: string;
+  account_number: string;
+ 
 }
 
 const BankInfoForm: React.FC = () => {
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
-    fullName: "Kenneth Valdez",
-    email: "fip@jukmuh.al",
-    phone: "(239) 816-9029",
-    mobile: "(320) 380-4539",
-    address: "Bay Area, San Francisco, CA",
+    bank_name: "Kenneth Valdez",
+    bank_code: "fip@jukmuh.al",
+    account_number: "fip@jukmuh.al",
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,58 +34,36 @@ const BankInfoForm: React.FC = () => {
   return (
     <div className="w-full shadow-md rounded-md p-4">
       <h3 className="font-bold ml-4 mb-4 text-lg">
-        Bank Information --- To be edited
+        Bank Information
       </h3>
       <div className="mb-4 flex justify-between items-center border-b pb-1">
-        <label className="text-slate-500 dark:text-slate-200 font-bold">Full Name</label>
+        <label className="text-slate-500 dark:text-slate-200 font-bold">Bank Name</label>
         <input
           type="text"
-          name="fullName"
-          value={formData.fullName}
+          name="bankName"
+          value={formData.bank_name}
           onChange={handleChange}
           disabled={!isEditable}
           className="w-10/12  p-2 disabled:text-gray-600 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
         />
       </div>
       <div className="mb-4 flex justify-between items-center border-b pb-1">
-        <label className="text-slate-500 dark:text-slate-200 font-bold">Email</label>
+        <label className="text-slate-500 dark:text-slate-200 font-bold">Bank Code</label>
         <input
-          type="email"
-          name="email"
-          value={formData.email}
+          type="bankCode"
+          name="bankCode"
+          value={formData.bank_code}
           onChange={handleChange}
           disabled={!isEditable}
           className="w-10/12  p-2 disabled:text-gray-600 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
         />
       </div>
       <div className="mb-4 flex justify-between items-center border-b pb-1">
-        <label className="text-slate-500 dark:text-slate-200 font-bold">Phone</label>
+        <label className="text-slate-500 dark:text-slate-200 font-bold">Account Number</label>
         <input
-          type="text"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          disabled={!isEditable}
-          className="w-10/12  p-2 disabled:text-gray-600 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
-        />
-      </div>
-      <div className="mb-4 flex justify-between items-center border-b pb-1">
-        <label className="text-slate-500 dark:text-slate-200 font-bold">Mobile</label>
-        <input
-          type="text"
-          name="mobile"
-          value={formData.mobile}
-          onChange={handleChange}
-          disabled={!isEditable}
-          className="w-10/12  p-2 disabled:text-gray-600 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
-        />
-      </div>
-      <div className="mb-4 flex justify-between items-center border-b pb-1">
-        <label className="text-slate-500 dark:text-slate-200 font-bold">Address</label>
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
+          type="bankCode"
+          name="bankCode"
+          value={formData.account_number}
           onChange={handleChange}
           disabled={!isEditable}
           className="w-10/12  p-2 disabled:text-gray-600 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
