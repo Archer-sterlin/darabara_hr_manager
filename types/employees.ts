@@ -18,17 +18,8 @@ interface Employee{
         gender: string;
         date_of_birth: string;
         marital_status: string;
-    };
-    address:{
-        street: string;
-        country: string;
-        state: string;
-        postal_code: string;
-        town: string;
-        local_govt: string;
-        city: string;
-    },
-
+        address: string
+    }
     job_title: string;
     department: string;
     manager: string;
