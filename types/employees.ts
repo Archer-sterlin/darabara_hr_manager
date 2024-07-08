@@ -8,7 +8,7 @@
 //     date_joined: string;
 // }
 
-interface Employee{
+export interface Employee{
     id: string;
     user: {
         first_name:string;
@@ -29,5 +29,3 @@ interface Employee{
     date_joined: string;
 }
 
-
-export default Employee
