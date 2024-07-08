@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import ProfileForm from "../components/ProfileForm";
+import AddressForm from "../components/AddressForm";
 import BankInfoForm from "../components/BankInfoForm";
 import PasswordForm from "../components/PasswordForm";
 import Person from "@/img/kratos.png";
@@ -11,17 +12,17 @@ const HRProfile: React.FC = () => {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [counter, setCounter] = useState(0);
 
-  // useEffect(() => {
-  //   let timer: NodeJS.Timeout ;
-  //   if (clockedIn && startTime) {
-  //     timer = setInterval(() => {
-  //       setCounter(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
-  //     }, 1000);
-  //   } else {
-  //     clearInterval(timer);
-  //   }
-  //   return () => clearInterval(timer);
-  // }, [clockedIn, startTime]);
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (clockedIn && startTime) {
+      timer = setInterval(() => {
+        setCounter(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
+      }, 1000);
+    } else {
+      clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [clockedIn, startTime]);
 
   const handleClockIn = () => {
     setClockedIn(true);
@@ -62,7 +63,7 @@ const HRProfile: React.FC = () => {
             </div>
             <div className="my-4 text-center text-slate-500 dark:text-slate-200">
               <h1 className="text-2xl font-bold">John Doe</h1>
-              <p className="text-sm ml-auto">Software Engineer</p>
+              <p className="text-sm">Software Engineer</p>
               <div className="flex gap-4 justify-center items-center my-4">
                 <button className="w-fit px-4 py-2 rounded-lg bg-cyan-700 text-white">
                   Upload Picture
@@ -73,17 +74,17 @@ const HRProfile: React.FC = () => {
           <div className="p-4 rounded-lg shadow bg-white dark:bg-gray-800">
             <h2 className="font-bold text-center text-slate-500 dark:text-slate-200 text-lg">Employee Details</h2>
             <div className="space-y-4 px-4">
-              <div className="flex justify-between items-center border-b pb-1">
-                <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4">Employee ID</p>
-                <p className="text-slate-500 dark:text-slate-200 text-lg">1101AD</p>
+              <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Employee ID</p>
+                <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">1101AD</p>
               </div>
-              <div className="flex justify-between items-center border-b pb-1">
-                <p className="font-semibold text-slate-500 dark:text-slate-200 mr-2">Job Title</p>
-                <p className="text-slate-500 dark:text-slate-200 text-lg">Software Developer</p>
+              <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Job Title</p>
+                <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">Software Developer</p>
               </div>
-              <div className="flex justify-between items-center border-b pb-1">
-                <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4">Employee Salary</p>
-                <p className="text-slate-500 dark:text-slate-200 text-lg">100,000</p>
+              <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Employee Salary</p>
+                <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">100,000</p>
               </div>
               <div className="flex flex-col items-center gap-4 my-4">
                 <button
@@ -127,4 +128,3 @@ const HRProfile: React.FC = () => {
 };
 
 export default HRProfile;
-
