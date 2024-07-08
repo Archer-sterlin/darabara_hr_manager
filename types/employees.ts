@@ -1,12 +1,3 @@
-// export interface Employee {
-//     id: string;
-//     name: string;
-//     gender: string;
-//     email: string;
-//     job_title: string;
-//     department: string;
-//     date_joined: string;
-// }
 
 export interface Employee{
     id: string;

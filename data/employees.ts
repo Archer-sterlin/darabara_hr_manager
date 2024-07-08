@@ -1,4 +1,5 @@
-import  Employee  from "@/types/employees";
+import  {Employee}  from "@/types/employees";
+
 
 const employees: Employee [] = [
     {
@@ -11,17 +12,10 @@ const employees: Employee [] = [
             email: "john.doe@example.com",
             mobile: "+2347018321",
             date_of_birth: "1994-04-22",
-            marital_status: "single"
+            marital_status: "single",
+            address: "Manhattan"
         },
-        address: {
-            street: "123 Main St",
-            country: "1USA",
-            city: "New York",
-            state: "NY",
-            postal_code: "10001",
-            local_govt: "somewhere",
-            town: "Manhattan"
-        },
+       
         job_title: "Software Engineer",
         department: "IT",
         manager: "John Doe",
@@ -40,17 +34,11 @@ const employees: Employee [] = [
             email: "batman@example.com",
             mobile: "+2347018321",
             date_of_birth: "1994-04-22",
-            marital_status: "single"
+            marital_status: "single",
+            address: "Manhattan"
+
         },
-        address: {
-            street: "123 Main St",
-            country: "1USA",
-            city: "New York",
-            state: "NY",
-            postal_code: "10001",
-            local_govt: "somewhere",
-            town: "Manhattan"
-        },
+        
         job_title: "Software Engineer",
         department: "IT",
         manager: "Bruce Wayne",
@@ -58,6 +46,7 @@ const employees: Employee [] = [
         last_promotion: "2022-01-01",
         employee_id: "2022-01-01",
         date_joined: "2022-01-01",
+
     },
     {
         id: "3",
@@ -69,17 +58,11 @@ const employees: Employee [] = [
             email: "superman@example.com",
             mobile: "+2347018321",
             date_of_birth: "1994-04-22",
-            marital_status: "single"
+            marital_status: "single",
+            address: "Manhattan"
+
         },
-        address: {
-            street: "123 Main St",
-            country: "1USA",
-            city: "New York",
-            state: "NY",
-            postal_code: "10001",
-            local_govt: "somewhere",
-            town: "Manhattan"
-        },
+       
         job_title: "Software Engineer",
         department: "IT",
         manager: "Clark Kent",
