@@ -13,9 +13,6 @@ import axios from "axios";
 const HRProfile: React.FC = () => {
   const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
-  const [clockedIn, setClockedIn] = useState(false);
-  const [startTime, setStartTime] = useState<Date | null>(null);
-  const [counter, setCounter] = useState(0);
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
@@ -43,40 +40,7 @@ const HRProfile: React.FC = () => {
     }
   }, [router]);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (clockedIn && startTime) {
-      timer = setInterval(() => {
-        setCounter(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
-      }, 1000);
-    } else {
-      clearInterval(timer);
-    }
-    return () => clearInterval(timer);
-  }, [clockedIn, startTime]);
 
-  const handleClockIn = async () => {
-    setClockedIn(true);
-    setStartTime(new Date());
-    try {
-      await axios.post('/api/clockin'); // Ensure you have the correct endpoint
-    } catch (error) {
-      console.error('Error during clock in:', error);
-    }
-  };
-
-  const handleClockOut = () => {
-    setClockedIn(false);
-    setCounter(0);
-    setStartTime(null);
-  };
-
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-    return `${hours}h ${minutes}m ${remainingSeconds}s`;
-  };
 
   if (!authenticated || !profile) {
     return null; // Render nothing while authentication is being checked
