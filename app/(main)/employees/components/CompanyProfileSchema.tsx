@@ -5,6 +5,9 @@ interface Employee{
         last_name: string;
         email: string;
         mobile: string;
+        gender: string;
+        address: string;
+        date_of_birth: string;
     };
     job_title: string;
     department: string;

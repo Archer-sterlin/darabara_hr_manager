@@ -6,3 +6,8 @@ const AuthPage = () => {
 }
  
 export default AuthPage;
+
+// toast({
+//     title: 'Profile has been updated successfully',
+//     description: `Updated by ${employee?.user?.first_name}`,
+//   });

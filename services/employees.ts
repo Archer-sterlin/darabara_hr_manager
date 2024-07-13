@@ -1,0 +1,51 @@
+// employeeService.ts
+
+import axios from 'axios';
+
+// Create an Axios instance with default configuration
+const axiosInstance = axios.create({
+  baseURL: 'http://127.0.0.1:8000/api/v1',  // Replace with your actual API base URL
+  timeout: 10000,  // Example timeout
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Function to fetch all employees
+export const fetchAllEmployees = async () => {
+  try {
+    const token = localStorage.getItem('access');
+    if (!token) {
+      throw new Error('No access token found');
+    }
+
+    const response = await axiosInstance.get('/employees', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;  // Assuming your API returns data directly
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+    throw error;  // Optionally handle or rethrow the error
+  }
+};
+
+export const fetchEmployeeData = async () => {
+  try {
+    const token = localStorage.getItem('access');
+    if (!token) {
+      throw new Error('No access token found');
+    }
+
+    const response = await axiosInstance.get(`/employees/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;  // Assuming your API returns data directly
+  } catch (error) {
+    console.error('Error fetching employee data:', error);
+    throw error;  // Optionally handle or rethrow the error
+  }
+};

@@ -20,4 +20,5 @@ interface PersonalData{
 }
 }
 
+
 export default PersonalData

@@ -12,7 +12,7 @@ interface BankInfoFormProps {
   bankInfo: FormData;
 }
 
-const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
+const ViewBankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     bank_name: bankInfo.bank_name,
@@ -83,14 +83,9 @@ const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
           className="w-10/12 p-2 dark:bg-slate-950 disabled:text-gray-600 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right" // Changed text alignment to right
         />
       </div>
-      <button
-        onClick={isEditable ? handleSaveClick : handleEditClick}
-        className="bg-cyan-700 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-      >
-        {isEditable ? 'Save' : 'Edit'}
-      </button>
+      
     </div>
   );
 };
 
-export default BankInfoForm;
+export default ViewBankInfoForm;

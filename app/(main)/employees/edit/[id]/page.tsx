@@ -1,253 +1,192 @@
 'use client';
 
-import BackButton from '@/components/BackButton';
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import employees from '@/data/employees';
-import { useToast } from '@/components/ui/use-toast';
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import ProfileForm from "../../components/CompanyProfileForm";
+import ViewBankInfoForm from "../../components/ViewBankInfoForm ";
+import SalaryForm from "../../components/SalaryForm";
+import Person from "@/img/kratos.png";
+import { useRouter } from 'next/navigation';
+import jwt_decode from 'jwt-decode';
+import axios from "axios";
 
-interface EmployeeEditPageProp {
-  params: {
-    id: string;
+const HRProfile: React.FC = () => {
+  const router = useRouter();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [clockedIn, setClockedIn] = useState(false);
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [counter, setCounter] = useState(0);
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access');
+    const profileString = localStorage.getItem('profile');
+
+    if (!token || !profileString) {
+      router.push('/auth');
+      return;
+    }
+
+    try {
+      const decoded: any = jwt_decode(token);
+      if (!decoded) {
+        router.push('/auth');
+      } else {
+        setAuthenticated(true);
+      }
+
+      const profileObj = JSON.parse(profileString);
+      setProfile(profileObj);
+    } catch (error) {
+      console.error('Invalid token or profile:', error);
+      router.push('/auth');
+    }
+  }, [router]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (clockedIn && startTime) {
+      timer = setInterval(() => {
+        setCounter(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
+      }, 1000);
+    } else {
+      clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [clockedIn, startTime]);
+
+  const handleClockIn = async () => {
+    setClockedIn(true);
+    setStartTime(new Date());
+    try {
+      await axios.post('/api/clockin'); // Ensure you have the correct endpoint
+    } catch (error) {
+      console.error('Error during clock in:', error);
+    }
+  };
+
+  const handleClockOut = () => {
+    setClockedIn(false);
+    setCounter(0);
+    setStartTime(null);
+  };
+
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${hours}h ${minutes}m ${remainingSeconds}s`;
+  };
+
+  if (!authenticated || !profile) {
+    return null; // Render nothing while authentication is being checked
   }
-}
 
-const formSchema = z.object({
-  first_name: z.string().min(3,{
-      message: 'first name must be at least 3 characters long'
-  }),
-  last_name: z.string().min(3,{
-    message: 'last name must be at least 3 characters long'
-}),
-  mobile: z.string().min(9,{
-      message: 'Invalid mobile number'
-  }),
-  gender: z.string().min(3,{
-      message: 'gender must be at least 3 characters long'
-  }),
-  email: z.string().min(3,{
-      message: 'email must be at least 3 characters long'
-  }),
-  means_of_identification_type: z.string().min(3,{
-    message: 'email must be at least 3 characters long'
-  }),
-  password: z.string().min(3,{
-    message: 'password is required'
-}),
-confirm_password: z.string().min(3,{
-    message: 'password is required'
-})
-})
+  const bankInfo = {
+    bank_code: profile?.bank_code,
+    bank_name: profile?.bank_name,
+    account_number: profile?.account_number,
+    account_name: profile?.account_name,
+  };
 
-const EmployeeEditPage = ({ params }: EmployeeEditPageProp) => {
-  const { toast } = useToast();
+  const employee = {
+    job_title: profile.job_title?.title,
+    department: profile.department?.name,
+    work_location: profile.work_location,
+    employment_type: profile.employment_type,
+    manager: `${profile.manager?.user?.first_name} ${profile.manager?.user?.last_name}`,
+  };
 
-  const employee = employees.find((employee) => employee.id === params.id);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      first_name: employee?.user?.first_name || '',
-      last_name: employee?.user?.last_name || '',
-      gender: employee?.user?.gender || '',
-      email: employee?.user?.email || '',
-    },
-  });
-
-  const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
-    toast({
-      title: 'Profile has been updated successfully',
-      description: `Updated by ${employee?.user?.first_name}`,
-    });
+  const salary = {
+    base_salary: 2300,
+    pay_grade: "level 16",
+    tax_deductions: 23.4,
+    other_deductions: 12.9,
+    net_salary: 3000,
   };
 
   return (
-    <>
-      <BackButton text='Back To Employees list' link='/employees' />
-      <h3 className='text-2xl mb-4'>Edit Profile</h3>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-8'>
-          <FormField
-            control={form.control}
-            name='first_name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                  First Name
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                    placeholder='Enter First Name'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='last_name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                  Last Name
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                    placeholder='Enter Last Name'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-      <FormField
-            control={form.control}
-            name='means_of_identification_type'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                  ID Type
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                    placeholder='Enter ID Type.'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-      <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                  Email
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                    placeholder='Enter Email'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-
-          <FormField
-            control={form.control}
-            name='mobile'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                  Phone Number
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                    placeholder='Enter Phone Number'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='gender'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                  Gender
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                    placeholder='Enter Gender'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-          control={form.control}
-          name='password'
-          render={({ field }) => (
-                    <FormItem>
-                        <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                        password
-                        </FormLabel>
-                        <FormControl>
-                        <Input
-                            type='password'
-                            className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                            placeholder=' Enter password'
-                            {...field}
-                        />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                        )}
-                />
-
-            <FormField
-            control={form.control}
-            name='confirm_password'
-            render={({ field }) => (
-                  <FormItem>
-                      <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                      confirm password
-                      </FormLabel>
-                      <FormControl>
-                      <Input
-                          type='password'
-                          className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                          placeholder='Confirm password'
-                          {...field}
-                      />
-                      </FormControl>
-                      <FormMessage />
-                  </FormItem>
-                      )}
+    <div className="p-4">
+      <div className="w-full flex gap-8 flex-col lg:flex-row">
+        <div className="w-full lg:w-4/12 flex flex-col gap-8">
+          <div className="p-4 h-fit rounded-lg shadow bg-white dark:bg-gray-800">
+            <div className="w-32 h-32 rounded-full mx-auto">
+              <Image
+                src={Person}
+                alt="sample profile picture."
+                width={100}
+                height={100}
+                style={{
+                  borderRadius: "99999999px",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
               />
+            </div>
+            <div className="my-4 text-center text-slate-500 dark:text-slate-200">
+              <h1 className="text-2xl font-bold pb-8">Personal Information</h1>
+              <div className="space-y-4 px-4">
+                <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                  <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Name:</p>
+                  <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{profile.user?.first_name} {profile.user?.last_name}</p>
+                </div>
 
-          <Button className='w-full dark:bg-slate-800 dark:text-white'>
-            Update
-          </Button>
-        </form>
-      </Form>
-    </>
+                <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                  <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Email:</p>
+                  <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{profile.user?.email}</p>
+                </div>
+                <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                  <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Mobile:</p>
+                  <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{profile.user?.mobile}</p>
+                </div>
+                <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                  <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Gender:</p>
+                  <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{profile.user?.gender}</p>
+                </div>
+                <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                  <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">DOB:</p>
+                  <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{profile.user?.date_of_birth}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 rounded-lg shadow bg-white dark:bg-gray-800">
+            <h2 className="font-bold text-center text-slate-500 dark:text-slate-200 text-lg pb-8">Emergency Contact</h2>
+            <div className="space-y-4 px-4">
+              {profile.emergency_contacts?.map((contact: any) => (
+                <div key={contact.id}>
+                  <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                    <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Name:</p>
+                    <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{contact.name}</p>
+                  </div>
+                  <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                    <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Phone Number:</p>
+                    <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{contact.phone_number}</p>
+                  </div>
+                  <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                    <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Gender:</p>
+                    <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{contact.gender}</p>
+                  </div>
+                  <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
+                    <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Relationship:</p>
+                    <p className="text-slate-500 dark:text-slate-200 text-lg flex-shrink-0">{contact.relationship}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="w-full flex flex-col gap-8 whitespace-nowrap">
+          <ProfileForm employee={employee} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 whitespace-nowrap">
+            <ViewBankInfoForm bankInfo={bankInfo} />
+            <SalaryForm salary={profile.salary_details[0]} />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default EmployeeEditPage;
+export default HRProfile;
