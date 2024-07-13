@@ -82,9 +82,9 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
   };
 
   const roleOptions = [
-    { value: 0, label: 'Admin' },
-    { value: 1, label: 'Manager' },
-    { value: 2, label: 'Employee'},
+    { value: '0', label: 'Admin' },
+    { value: '1', label: 'Manager' },
+    { value: '2', label: 'Employee'},
     // Add more roles as needed
   ];
 
@@ -206,8 +206,8 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
             )}
           />
           {/* Add other fields here in a similar manner */}
-          <Button className='w-full dark:bg-slate-800 dark:text-white'>
-            Update
+          <Button className='w-full dark:bg-slate-800 dark:text-white hover:bg-cyan-500'>
+            Invite
           </Button>
         </form>
       </Form>

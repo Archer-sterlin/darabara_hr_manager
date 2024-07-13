@@ -54,7 +54,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
           value={formData.first_name}
           onChange={handleChange}
           disabled={!isEditable}
-          className="w-10/12 p-2 disabled:text-slate-500 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
+          className="w-10/12 p-2 disabled:text-slate-500 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
       <div className="mb-4 flex justify-between items-center border-b pb-1">
@@ -65,7 +65,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
           value={formData.last_name}
           onChange={handleChange}
           disabled={!isEditable}
-          className="w-10/12 p-2 disabled:text-slate-500 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
+          className="w-10/12 p-2 disabled:text-slate-500 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
       <div className="mb-4 flex justify-between items-center border-b pb-1">
@@ -76,7 +76,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
           value={formData.email}
           onChange={handleChange}
           disabled={!isEditable}
-          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
+          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
      
@@ -88,7 +88,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
           value={formData.mobile}
           onChange={handleChange}
           disabled={!isEditable}
-          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
+          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
 
@@ -100,7 +100,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
           value={formData.gender}
           onChange={handleChange}
           disabled={!isEditable}
-          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
+          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
 
@@ -112,7 +112,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
           value={formData.date_of_birth}
           onChange={handleChange}
           disabled={!isEditable}
-          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
+          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
       <div className="mb-4 flex justify-between items-center border-b pb-1">
@@ -123,12 +123,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
           value={formData.address}
           onChange={handleChange}
           disabled={!isEditable}
-          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0"
+          className="w-10/12 p-2 disabled:text-gray-600 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
       <button
         onClick={isEditable ? handleSaveClick : handleEditClick}
-        className="bg-cyan-700 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+        className="w-full dark:bg-slate-800 dark:text-white hover:bg-cyan-500 px-4 py-2 rounded-md"
       >
         {isEditable ? 'Save' : 'Edit'}
       </button>
