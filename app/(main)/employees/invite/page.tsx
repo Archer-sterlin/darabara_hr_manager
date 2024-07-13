@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/components/ui/use-toast';
 
 interface EmployeeEditPageProp {
@@ -83,7 +84,7 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
   const roleOptions = [
     { value: 0, label: 'Admin' },
     { value: 1, label: 'Manager' },
-    { value: 2, label: 'Employee' },
+    { value: 2, label: 'Employee'},
     // Add more roles as needed
   ];
 
@@ -140,17 +141,27 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
                   Role
                 </FormLabel>
                 <FormControl>
-                  <select
-                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
-                    {...field}
-                  >
-                    <option value=''>Select Role</option>
-                    {roleOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className='w-full'>
+                      <Input
+                        readOnly
+                        className='w-full bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0 cursor-pointer'
+                        placeholder='Select Role'
+                        {...field}
+                        value={roleOptions.find(option => option.value === field.value)?.label || ''}
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className='w-full'>
+                      {roleOptions.map(option => (
+                        <DropdownMenuItem
+                          key={option.value}
+                          onSelect={() => field.onChange(option.value)}
+                        >
+                          {option.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </FormControl>
                 <FormMessage />
               </FormItem>
