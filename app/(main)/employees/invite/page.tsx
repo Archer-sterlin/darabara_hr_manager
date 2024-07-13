@@ -79,7 +79,7 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
     console.log(data)
     toast({
       title: 'Invite  successfully',
-      description: `Updated by ${employee?.user?.first_name}`,
+      description: `Invitation mail has been sent to ${data.email}`,
     });
   };
 
