@@ -44,7 +44,7 @@ const LoginForm = () => {
   useEffect(() => {
     const token = localStorage.getItem('access');
     if (token) {
-      const decoded = jwt_decode(token);
+      const decoded: any = jwt_decode(token);
       setUser(decoded);
       router.push(`/employees/${decoded.user_id}`);
     }
@@ -59,7 +59,7 @@ const LoginForm = () => {
       localStorage.setItem('refresh', data.token.refresh);
       localStorage.setItem('profile', JSON.stringify(data.data));
 
-      const decoded = jwt_decode(data.token.access);
+      const decoded: any = jwt_decode(data.token.access);
       setUser(decoded);
      
       router.push(`/employees/me`);

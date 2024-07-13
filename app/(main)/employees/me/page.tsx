@@ -1,5 +1,4 @@
-"use client";
-
+'use client';
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import ProfileForm from "../components/ProfileForm";
@@ -8,7 +7,7 @@ import PasswordForm from "../components/PasswordForm";
 import Person from "@/img/kratos.png";
 import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
-import { fetchEmployeeData } from "@/services/employees"; // Adjust the path as needed
+import { fetchEmployeeData } from "@/services/employees";
 
 const HRProfile: React.FC = () => {
   const router = useRouter();
@@ -42,7 +41,7 @@ const HRProfile: React.FC = () => {
   const fetchProfileData = async () => {
     try {
       const employeeData = await fetchEmployeeData();
-      console.log("Fetched employee data:", employeeData.data); // Log the fetched data
+      console.log("Fetched employee data:", employeeData.data);
       setProfile(employeeData.data);
     } catch (error) {
       console.error("Error fetching employee data:", error);
@@ -51,15 +50,19 @@ const HRProfile: React.FC = () => {
   };
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: NodeJS.Timeout | null = null;
+
     if (clockedIn && startTime) {
       timer = setInterval(() => {
         setCounter(Math.floor((new Date().getTime() - startTime.getTime()) / 1000));
       }, 1000);
-    } else {
-      clearInterval(timer);
     }
-    return () => clearInterval(timer);
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
   }, [clockedIn, startTime]);
 
   const handleClockIn = () => {
@@ -83,7 +86,7 @@ const HRProfile: React.FC = () => {
   };
 
   if (!authenticated || !profile) {
-    return null; // Render nothing while authentication is being checked
+    return null;
   }
 
   const bankInfo = {
@@ -92,7 +95,7 @@ const HRProfile: React.FC = () => {
     account_number: profile?.account_number,
     account_name: profile?.account_name,
   };
-  console.log(bankInfo);
+
   return (
     <div className="p-4">
       <div className="w-full flex gap-8 flex-col lg:flex-row">

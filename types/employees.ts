@@ -9,6 +9,7 @@ export interface User {
     last_name: string;
     gender: string;
     role: string;
+    address:string;
     date_of_birth: string;
     // Add other relevant fields as per your actual data structure
   }
