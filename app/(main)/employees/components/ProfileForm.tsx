@@ -63,7 +63,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
     const token = localStorage.getItem('access');
     console.log(formData)
     try {
-      const res = await axios.put(`http://chile64.pythonanywhere.com/api/v1/employees/${user.id}/`, formData, {
+      const res = await axios.put(`https://chile64.pythonanywhere.com/api/v1/employees/${user.id}/`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -43,7 +43,7 @@ const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
     setIsEditable(false);
     const token = localStorage.getItem('access');
     try {
-      const res = await axios.put(`http://chile64.pythonanywhere.com/api/v1/employees/${bankInfo.id}/update_bank_info/`, formData, {
+      const res = await axios.put(`https://chile64.pythonanywhere.com/api/v1/employees/${bankInfo.id}/update_bank_info/`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

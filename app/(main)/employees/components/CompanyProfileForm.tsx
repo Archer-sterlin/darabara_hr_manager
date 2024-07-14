@@ -14,7 +14,7 @@ interface ProfileFormProps {
 }
 
 const CompanyProfileForm: React.FC<ProfileFormProps> = ({ employee }) => {
-  console.log(employee);
+
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     job_title: employee?.job_title,
