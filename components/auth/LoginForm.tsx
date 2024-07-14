@@ -35,15 +35,15 @@ const LoginForm = () => {
     },
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem('access');
-    if (token) {
-      const decoded: any = jwt_decode(token);
-      setUser(decoded);
-      router.push(`/employees/me`);
-    }
-    setLoading(false);
-  }, [router]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('access');
+  //   if (token) {
+  //     const decoded: any = jwt_decode(token);
+  //     setUser(decoded);
+  //     router.push(`/employees/me`);
+  //   }
+  //   setLoading(false);
+  // }, [router]);
 
   const handleSubmit = async (form_data: z.infer<typeof formSchema>) => {
     try {

@@ -41,7 +41,7 @@ const HRProfile: React.FC = () => {
   const fetchProfileData = async () => {
     try {
       const employeeData = await fetchEmployeeData();
-      console.log("Fetched employee data:", employeeData.data);
+  
       setProfile(employeeData.data);
     } catch (error) {
       console.error("Error fetching employee data:", error);
