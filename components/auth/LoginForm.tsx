@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { useEffect, useState } from 'react';
+import { toast } from '../ui/use-toast';
 
 const formSchema = z.object({
   username: z.string().min(3, {
@@ -55,18 +56,33 @@ const LoginForm = () => {
     try {
       const { data } = await axios.post('https://chile64.pythonanywhere.com/api/v1/auth/login/', form_data);
  
-      localStorage.setItem('access', data.token.access);
-      localStorage.setItem('refresh', data.token.refresh);
-      localStorage.setItem('profile', JSON.stringify(data.data));
 
-      const decoded: any = jwt_decode(data.token.access);
-      setUser(decoded);
-     
-      router.push(`/employees/me`);
-    } catch (error) {
-      console.error('Failed to login', error);
+        if (data.token.access){
+          localStorage.setItem('access', data.token.access);
+          localStorage.setItem('refresh', data.token.refresh);
+          localStorage.setItem('profile', JSON.stringify(data.data));
+
+          const decoded: any = jwt_decode(data.token.access);
+          setUser(decoded);
+          router.push(`/employees/me`);
+        }
+        else {
+          toast({
+            title: 'Error',
+            description: `Failed to update`,
+          });
+        }
+    }
+    
+     catch (error) {
+      toast({
+        title: 'Error',
+        description: `${error}`,
+      });
     }
   };
+};
+
 
   return (
     <Card>

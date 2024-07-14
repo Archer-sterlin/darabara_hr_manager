@@ -9,7 +9,7 @@ import Person from "@/img/kratos.png";
 import { useRouter } from 'next/navigation';
 import jwt_decode from 'jwt-decode';
 import { fetchEmployeeData } from "@/services/employees";
-import axios from "axios";
+
 
 const HRProfile: React.FC = () => {
   const router = useRouter();

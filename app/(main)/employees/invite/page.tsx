@@ -76,7 +76,7 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
  
     const token = localStorage.getItem('access');
-    const res = await axios.post('http://chile64.pythonanywhere.com/api/v1/auth/invite/', data,  {
+    const res = await axios.post('https://chile64.pythonanywhere.com/api/v1/auth/invite/', data,  {
       headers: {
         'Authorization': `Bearer ${token}`
       }
