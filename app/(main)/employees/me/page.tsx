@@ -94,7 +94,19 @@ const HRProfile: React.FC = () => {
     bank_name: profile?.bank_name,
     account_number: profile?.account_number,
     account_name: profile?.account_name,
+    id: profile.id,
   };
+
+  const user = {
+    first_name: profile?.user?.first_name,
+    last_name: profile?.user?.last_name,
+    email: profile?.user?.email,
+    mobile: profile?.user?.mobile,
+    address: profile?.user?.address,
+    gender: profile?.user?.gender,
+    date_of_birth: profile?.user?.date_of_birth,
+    id: profile.id
+  }
 
   return (
     <div className="p-4">
@@ -184,7 +196,7 @@ const HRProfile: React.FC = () => {
           </div>
         </div>
         <div className="w-full flex flex-col gap-8 whitespace-nowrap">
-          <ProfileForm user={profile.user} />
+          <ProfileForm user={user}/>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 whitespace-nowrap">
             <BankInfoForm bankInfo={bankInfo} />
             <PasswordForm />

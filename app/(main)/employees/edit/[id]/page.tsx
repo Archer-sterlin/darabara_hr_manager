@@ -8,6 +8,7 @@ import SalaryForm from "../../components/SalaryForm";
 import Person from "@/img/kratos.png";
 import { useRouter } from 'next/navigation';
 import jwt_decode from 'jwt-decode';
+import { fetchEmployeeData } from "@/services/employees";
 import axios from "axios";
 
 const HRProfile: React.FC = () => {
@@ -16,30 +17,36 @@ const HRProfile: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('access');
-    const profileString = localStorage.getItem('profile');
-
-    if (!token || !profileString) {
-      router.push('/auth');
+    const token = localStorage.getItem("access");
+    if (!token) {
+      router.push("/auth");
       return;
     }
 
     try {
       const decoded: any = jwt_decode(token);
       if (!decoded) {
-        router.push('/auth');
+        router.push("/auth");
       } else {
         setAuthenticated(true);
+        fetchProfileData();
       }
-
-      const profileObj = JSON.parse(profileString);
-      setProfile(profileObj);
     } catch (error) {
-      console.error('Invalid token or profile:', error);
-      router.push('/auth');
+      console.error("Invalid token:", error);
+      router.push("/auth");
     }
   }, [router]);
 
+  const fetchProfileData = async () => {
+    try {
+      const employeeData = await fetchEmployeeData();
+      console.log("Fetched employee data:", employeeData.data);
+      setProfile(employeeData.data);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+      router.push("/auth");
+    }
+  };
 
 
   if (!authenticated || !profile) {
@@ -145,7 +152,7 @@ const HRProfile: React.FC = () => {
           <ProfileForm employee={employee} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 whitespace-nowrap">
             <ViewBankInfoForm bankInfo={bankInfo} />
-            <SalaryForm salary={profile.salary_details[0]} />
+            <SalaryForm salary={salary} />
           </div>
         </div>
       </div>

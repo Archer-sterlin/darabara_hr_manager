@@ -1,4 +1,6 @@
 "use client";
+import { toast } from '@/components/ui/use-toast';
+import axios from 'axios';
 import React, { useState, ChangeEvent, MouseEvent } from 'react';
 
 interface FormData {
@@ -8,8 +10,16 @@ interface FormData {
   account_name: string;
 }
 
+interface bankDetails {
+  bank_name: string;
+  bank_code: string;
+  account_number: string;
+  account_name: string;
+  id:string
+}
+
 interface BankInfoFormProps {
-  bankInfo: FormData;
+  bankInfo: bankDetails;
 }
 
 const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
@@ -29,12 +39,35 @@ const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
   const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
     setIsEditable(!isEditable);
   };
-
-  const handleSaveClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleSaveClick = async (e: MouseEvent<HTMLButtonElement>) => {
     setIsEditable(false);
-    // Handle submit logic... API call to submit the form
-    console.log(formData);
+    const token = localStorage.getItem('access');
+    try {
+      const res = await axios.put(`http://chile64.pythonanywhere.com/api/v1/employees/${bankInfo.id}/update_bank_info/`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (res.data.status) {
+        toast({
+          title: 'bank details updated successfully',
+          description: `Updated successful`,
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: `Failed to update`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: `${error}`,
+      });
+    }
   };
+
 
   return (
     <div className="w-full shadow-md rounded-md p-4">
@@ -94,3 +127,7 @@ const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
 };
 
 export default BankInfoForm;
+function jwt_decode(token: string | null): any {
+  throw new Error('Function not implemented.');
+}
+

@@ -1,5 +1,4 @@
 'use client';
-
 import BackButton from '@/components/BackButton';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
@@ -17,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/components/ui/use-toast';
+import axios from 'axios';
 
 interface EmployeeEditPageProp {
   params: {
@@ -26,43 +26,43 @@ interface EmployeeEditPageProp {
 
 const formSchema = z.object({
   first_name: z.string().min(3, {
-    message: 'first name must be at least 3 characters long'
+    message: 'First name must be at least 3 characters long'
   }),
   last_name: z.string().min(3, {
-    message: 'last name must be at least 3 characters long'
+    message: 'Last name must be at least 3 characters long'
   }),
   mobile: z.string().min(11, {
-    message: 'phone number must be at least 11 characters long'
+    message: 'Phone number must be at least 11 characters long'
   }),
   email: z.string().min(3, {
-    message: 'email must be at least 3 characters long'
+    message: 'Email must be at least 3 characters long'
   }),
-  role: z.string().min(3, {
-    message: 'role must be at least 3 characters long'
+  role: z.string().min(1, {
+    message: 'Role must be at least 3 characters long'
   }),
   employment_type: z.string().min(3, {
-    message: 'email must be at least 3 characters long'
+    message: 'Employment type must be at least 3 characters long'
   }),
   job_title: z.string().min(3, {
-    message: 'job title must be at least 3 characters long'
+    message: 'Job title must be at least 3 characters long'
   }),
   job_description: z.string().min(3, {
-    message: 'job title must be at least 3 characters long'
+    message: 'Job description must be at least 3 characters long'
   }),
   department_name: z.string().min(3, {
-    message: 'last name must be at least 3 characters long'
+    message: 'Department name must be at least 3 characters long'
   }),
   department_description: z.string().min(3, {
-    message: 'last name must be at least 3 characters long'
+    message: 'Department description must be at least 3 characters long'
   }),
   manager: z.string().min(9, {
     message: 'Invalid mobile number'
   }),
   work_location: z.string().min(3, {
-    message: 'gender must be at least 3 characters long'
+    message: 'Work location must be at least 3 characters long'
   }),
   last_promotion: z.string().min(3, {
-    message: 'email must be at least 3 characters long'
+    message: 'Last promotion must be at least 3 characters long'
   }),
 });
 
@@ -73,19 +73,30 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
     resolver: zodResolver(formSchema)
   });
 
-  const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+ 
+    const token = localStorage.getItem('access');
+    const res = await axios.post('http://chile64.pythonanywhere.com/api/v1/auth/invite/', data,  {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    } );
+    if (res.data.status) {
+      toast({
+        title: 'Invite successfully',
+        description: `Updated by ${data.first_name} ${data.last_name}`,
+      });
+    }
     toast({
-      title: 'Invite successfully',
-      description: `Updated by ${data.first_name} ${data.last_name}`,
+      title: 'Error',
+      description: `Updated by ${data.first_name}`,
     });
   };
 
   const roleOptions = [
     { value: '0', label: 'Admin' },
     { value: '1', label: 'Manager' },
-    { value: '2', label: 'Employee'},
-    // Add more roles as needed
+    { value: '2', label: 'Employee' },
   ];
 
   return (
@@ -134,41 +145,6 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
           />
           <FormField
             control={form.control}
-            name='role'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
-                  Role
-                </FormLabel>
-                <FormControl>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className='w-full'>
-                      <Input
-                        readOnly
-                        className='w-full bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0 cursor-pointer'
-                        placeholder='Select Role'
-                        {...field}
-                        value={roleOptions.find(option => option.value === field.value)?.label || ''}
-                      />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className='w-full'>
-                      {roleOptions.map(option => (
-                        <DropdownMenuItem
-                          key={option.value}
-                          onSelect={() => field.onChange(option.value)}
-                        >
-                          {option.label}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name='mobile'
             render={({ field }) => (
               <FormItem>
@@ -205,7 +181,193 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
               </FormItem>
             )}
           />
-          {/* Add other fields here in a similar manner */}
+          <FormField
+            control={form.control}
+            name='role'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='block uppercase text-xs font-bold text-zinc-500 dark:text-white mb-1'>
+                  Role
+                </FormLabel>
+                <FormControl>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Input
+                        readOnly
+                        className='w-full bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0 cursor-pointer'
+                        placeholder='Select Role'
+                        {...field}
+                        value={roleOptions.find(option => option.value === field.value)?.label || ''}
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className='mt-1'>
+                      {roleOptions.map(option => (
+                        <DropdownMenuItem
+                          key={option.value}
+                          onSelect={() => field.onChange(option.value)}
+                        >
+                          {option.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='employment_type'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Employment Type
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Employment Type'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='job_title'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Job Title
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Job Title'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='job_description'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Job Description
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Job Description'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='department_name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Department Name
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Department Name'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='department_description'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Department Description
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Department Description'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='manager'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Manager
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Manager'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='work_location'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Work Location
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Work Location'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='last_promotion'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Last Promotion
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Last Promotion'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button className='w-full dark:bg-slate-800 dark:text-white hover:bg-cyan-500'>
             Invite
           </Button>

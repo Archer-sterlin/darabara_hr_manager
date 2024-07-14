@@ -46,14 +46,14 @@ const LoginForm = () => {
     if (token) {
       const decoded: any = jwt_decode(token);
       setUser(decoded);
-      router.push(`/employees/${decoded.user_id}`);
+      router.push(`/employees/me`);
     }
     setLoading(false);
   }, [router]);
 
   const handleSubmit = async (form_data: z.infer<typeof formSchema>) => {
     try {
-      const { data } = await axios.post('http://127.0.0.1:8000/api/v1/auth/login/', form_data);
+      const { data } = await axios.post('http://chile64.pythonanywhere.com/api/v1/auth/login/', form_data);
  
       localStorage.setItem('access', data.token.access);
       localStorage.setItem('refresh', data.token.refresh);

@@ -65,7 +65,7 @@ const EmployeesTable: React.FC<EmployeesTableProps> = ({ limit, title }) => {
           {filteredEmployees.map((employee) => (
             <TableRow key={employee.id}>
               <TableCell>
-                <Link href={`/employee/${employee.id}`} className="hover:underline">
+                <Link href={`/employees/edit/${employee.id}`} className="hover:underline">
                     {employee?.user?.first_name} {employee?.user?.last_name}
                 </Link>
               </TableCell>

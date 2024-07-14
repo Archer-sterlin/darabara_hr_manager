@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // Create an Axios instance with default configuration
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1',  // Replace with your actual API base URL
+  baseURL: 'http://chile64.pythonanywhere.com/api/v1',  // Replace with your actual API base URL
   timeout: 10000,  // Example timeout
   headers: {
     'Content-Type': 'application/json',
@@ -31,19 +31,29 @@ export const fetchAllEmployees = async () => {
   }
 };
 
-export const fetchEmployeeData = async () => {
+export const fetchEmployeeData = async (id=null) => {
   try {
     const token = localStorage.getItem('access');
+    console.log(token)
     if (!token) {
-      throw new Error('No access token found');
+      throw new Error('Not authorized');
     }
-
-    const response = await axiosInstance.get(`/employees/me`, {
+    if (id){
+      const response = await axiosInstance.get(`/employees/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    }
+    else{
+      const response = await axiosInstance.get(`/employees/me`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
-    return response.data;  // Assuming your API returns data directly
+    return response.data;}
+      // Assuming your API returns data directly
   } catch (error) {
     console.error('Error fetching employee data:', error);
     throw error;  // Optionally handle or rethrow the error
