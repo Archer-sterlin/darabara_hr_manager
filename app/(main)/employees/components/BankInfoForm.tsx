@@ -127,7 +127,4 @@ const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
 };
 
 export default BankInfoForm;
-function jwt_decode(token: string | null): any {
-  throw new Error('Function not implemented.');
-}
 
