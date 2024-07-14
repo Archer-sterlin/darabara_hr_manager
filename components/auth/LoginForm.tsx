@@ -53,7 +53,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (form_data: z.infer<typeof formSchema>) => {
     try {
-      const { data } = await axios.post('http://chile64.pythonanywhere.com/api/v1/auth/login/', form_data);
+      const { data } = await axios.post('https://chile64.pythonanywhere.com/api/v1/auth/login/', form_data);
  
       localStorage.setItem('access', data.token.access);
       localStorage.setItem('refresh', data.token.refresh);
