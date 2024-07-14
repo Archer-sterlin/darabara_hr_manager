@@ -36,12 +36,11 @@ const HRProfile: React.FC = () => {
       console.error("Invalid token:", error);
       router.push("/auth");
     }
-  }, [router]);
+  }, []);
 
   const fetchProfileData = async () => {
     try {
       const employeeData = await fetchEmployeeData();
-  
       setProfile(employeeData.data);
     } catch (error) {
       console.error("Error fetching employee data:", error);
