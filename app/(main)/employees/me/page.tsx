@@ -87,7 +87,7 @@ const HRProfile: React.FC = () => {
   if (!authenticated || !profile) {
     return null;
   }
-
+ 
   const bankInfo = {
     bank_code: profile?.bank_code,
     bank_name: profile?.bank_name,
@@ -115,7 +115,7 @@ const HRProfile: React.FC = () => {
             <div className="w-32 h-32 rounded-full mx-auto">
               <Image
                 src={profile.profile_picture}
-                alt="sample profile picture."
+                alt="profile picture."
                 width={100}
                 height={100}
                 style={{
