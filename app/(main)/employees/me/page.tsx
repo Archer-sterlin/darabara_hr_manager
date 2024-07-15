@@ -114,7 +114,7 @@ const HRProfile: React.FC = () => {
           <div className="p-4 h-fit rounded-lg shadow bg-white dark:bg-gray-800">
             <div className="w-32 h-32 rounded-full mx-auto">
               <Image
-                src={Person}
+                src={profile.profile_picture}
                 alt="sample profile picture."
                 width={100}
                 height={100}
