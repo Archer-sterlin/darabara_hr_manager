@@ -1,12 +1,10 @@
 'use client';
-
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { useEffect, useState } from 'react';
 import { toast } from '../ui/use-toast';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
@@ -24,8 +22,6 @@ const formSchema = z.object({
 
 const LoginForm = () => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,26 +31,15 @@ const LoginForm = () => {
     },
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem('access');
-    if (token) {
-      const decoded: any = jwt_decode(token);
-      setUser(decoded);
-      router.push(`/employees/me`);
-    }
-    setLoading(false);
-  }, [router]);
-
   const handleSubmit = async (form_data: z.infer<typeof formSchema>) => {
     try {
       const { data } = await axios.post('https://chile64.pythonanywhere.com/api/v1/auth/login/', form_data);
       if (data.token.access) {
+  
         localStorage.setItem('access', data.token.access);
         localStorage.setItem('refresh', data.token.refresh);
         localStorage.setItem('profile', JSON.stringify(data.data));
 
-        const decoded: any = jwt_decode(data.token.access);
-        setUser(decoded);
         router.push(`/employees/me`);
       } else {
         toast({

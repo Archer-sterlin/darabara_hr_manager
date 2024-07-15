@@ -9,6 +9,7 @@ import Person from "@/img/kratos.png";
 import { useRouter } from 'next/navigation';
 import jwt_decode from 'jwt-decode';
 import { fetchEmployeeData } from "@/services/employees";
+import { decode } from "querystring";
 
 
 const HRProfile: React.FC = () => {
@@ -29,17 +30,18 @@ const HRProfile: React.FC = () => {
         router.push("/auth");
       } else {
         setAuthenticated(true);
-        fetchProfileData();
+        fetchProfileData(decoded.user_id);
       }
     } catch (error) {
       console.error("Invalid token:", error);
+      localStorage.removeItem("access")
       router.push("/auth");
     }
   }, [router]);
 
-  const fetchProfileData = async () => {
+  const fetchProfileData = async (id:any) => {
     try {
-      const employeeData = await fetchEmployeeData();
+      const employeeData = await fetchEmployeeData(id);
       console.log("Fetched employee data:", employeeData.data);
       setProfile(employeeData.data);
     } catch (error) {

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import jwt_decode from 'jwt-decode';
+import Footer from '@/components/Footer';
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
@@ -48,7 +49,10 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className="p-5 w-full md:max-w-[1140px] overflow-auto">
                     {children}
                 </div>
+                
             </div>
+
+            <Footer />
         </>
     );
 }
