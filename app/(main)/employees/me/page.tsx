@@ -82,7 +82,11 @@ const HRProfile: React.FC = () => {
     setCounter(0);
     setStartTime(null);
     // Add your clock-out API call here
-    let res = await axiosInstance.get(`/employees/clock_out/${localStorage.getItem("attendance_id")}`)
+    let res = await axiosInstance.get(`/employees/clock_out/${localStorage.getItem("attendance_id")}`{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (res.status === 200){
       localStorage.removeItem("attendance_id")
     }
