@@ -63,11 +63,15 @@ const HRProfile: React.FC = () => {
       }
     };
   }, [clockedIn, startTime]);
-
+  const token = localStorage.getItem("access")
   const handleClockIn = async () => {
     setClockedIn(true);
     setStartTime(new Date());
-    let res = await axiosInstance.get("/employees/clock_in")
+    let res = await axiosInstance.get("/employees/clock_in",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (res.status === 200){
       localStorage.setItem("attendance_id", res.data.id)
     }

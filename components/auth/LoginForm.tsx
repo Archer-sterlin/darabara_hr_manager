@@ -39,7 +39,10 @@ const LoginForm = () => {
         localStorage.setItem('access', data.token.access);
         localStorage.setItem('refresh', data.token.refresh);
         localStorage.setItem('profile', JSON.stringify(data.data));
-
+        toast({
+          title: 'Login Successful',
+          description: `Login successful`,
+        });
         router.push(`/employees/me`);
       } else {
         toast({
