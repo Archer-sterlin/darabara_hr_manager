@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 // Create an Axios instance with default configuration
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: 'https://chile64.pythonanywhere.com/api/v1',  // Replace with your actual API base URL
   timeout: 10000,  // Example timeout
   headers: {

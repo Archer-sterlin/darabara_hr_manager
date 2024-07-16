@@ -4,10 +4,10 @@ import Image from "next/image";
 import ProfileForm from "../components/ProfileForm";
 import BankInfoForm from "../components/BankInfoForm";
 import PasswordForm from "../components/PasswordForm";
-import Person from "@/img/kratos.png";
 import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
-import { fetchEmployeeData } from "@/services/employees";
+import { fetchEmployeeData, axiosInstance } from "@/services/employees";
+
 
 const HRProfile: React.FC = () => {
   const router = useRouter();
@@ -64,17 +64,24 @@ const HRProfile: React.FC = () => {
     };
   }, [clockedIn, startTime]);
 
-  const handleClockIn = () => {
+  const handleClockIn = async () => {
     setClockedIn(true);
     setStartTime(new Date());
-    // Add your clock-in API call here
+    let res = await axiosInstance.get("/employees/clock_in")
+    if (res.status === 200){
+      localStorage.setItem("attendance_id", res.data.id)
+    }
   };
 
-  const handleClockOut = () => {
+  const handleClockOut = async () => {
     setClockedIn(false);
     setCounter(0);
     setStartTime(null);
     // Add your clock-out API call here
+    let res = await axiosInstance.get(`/employees/clock_out/${localStorage.getItem("attendance_id")}`)
+    if (res.status === 200){
+      localStorage.removeItem("attendance_id")
+    }
   };
 
   const formatTime = (seconds: number) => {
@@ -198,7 +205,7 @@ const HRProfile: React.FC = () => {
           <ProfileForm user={user}/>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 whitespace-nowrap">
             <BankInfoForm bankInfo={bankInfo} />
-            <PasswordForm />
+            <PasswordForm id={profile?.user.id}/>
           </div>
         </div>
       </div>

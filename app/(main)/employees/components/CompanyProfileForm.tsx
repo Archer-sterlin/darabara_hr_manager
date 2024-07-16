@@ -1,5 +1,7 @@
-"use client";
+'use client';
 import React, { useState, ChangeEvent, MouseEvent } from 'react';
+import { axiosInstance } from '@/services/employees';
+import { toast } from '@/components/ui/use-toast';
 
 interface FormData {
   job_title: string;
@@ -9,12 +11,20 @@ interface FormData {
   work_location: string;
 }
 
+interface EmployeeData {
+  job_title: string;
+  department: string;
+  employment_type: string;
+  manager: string;
+  work_location: string;
+  id: string;
+}
+
 interface ProfileFormProps {
-  employee: FormData;
+  employee: EmployeeData;
 }
 
 const CompanyProfileForm: React.FC<ProfileFormProps> = ({ employee }) => {
-
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     job_title: employee?.job_title,
@@ -33,10 +43,41 @@ const CompanyProfileForm: React.FC<ProfileFormProps> = ({ employee }) => {
     setIsEditable(!isEditable);
   };
 
-  const handleSaveClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleSaveClick = async (e: MouseEvent<HTMLButtonElement>) => {
     setIsEditable(false);
     // Handle submit logic... API call to submit the form
-    console.log(formData);
+    const token = localStorage.getItem('access');
+    if (!token) {
+      toast({
+        title: 'Error',
+        description: 'No access token found',
+      });
+      return;
+    }
+    try {
+      const res = await axiosInstance.put(`/employees/${employee.id}/`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.data.status) {
+        toast({
+          title: 'Profile details updated successfully',
+          description: 'Updated successfully',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Failed to update',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: `${error}`,
+      });
+    }
   };
 
   return (
@@ -97,7 +138,7 @@ const CompanyProfileForm: React.FC<ProfileFormProps> = ({ employee }) => {
           className="w-10/12 p-2 dark:bg-slate-950 disabled:text-slate-500 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
         />
       </div>
-      
+
       <button
         onClick={isEditable ? handleSaveClick : handleEditClick}
         className="w-full dark:bg-slate-800 dark:text-white hover:bg-cyan-500 px-4 py-2 rounded-md"

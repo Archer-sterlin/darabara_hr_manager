@@ -2,6 +2,7 @@
 import { toast } from '@/components/ui/use-toast';
 import axios from 'axios';
 import React, { useState, ChangeEvent, MouseEvent } from 'react';
+import { axiosInstance } from "@/services/employees";
 
 interface FormData {
   bank_name: string;
@@ -43,7 +44,7 @@ const BankInfoForm: React.FC<BankInfoFormProps> = ({ bankInfo }) => {
     setIsEditable(false);
     const token = localStorage.getItem('access');
     try {
-      const res = await axios.put(`https://chile64.pythonanywhere.com/api/v1/employees/${bankInfo.id}/update_bank_info/`, formData, {
+      const res = await axiosInstance.put(`/employees/${bankInfo.id}/update_bank_info/`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
