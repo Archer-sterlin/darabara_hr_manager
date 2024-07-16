@@ -67,6 +67,7 @@ const HRProfile: React.FC = () => {
     work_location: profile.work_location,
     employment_type: profile.employment_type,
     manager: `${profile.manager?.user?.first_name} ${profile.manager?.user?.last_name}`,
+    id: profile.id
   };
 
   const salary = {
