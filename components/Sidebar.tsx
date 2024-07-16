@@ -55,7 +55,7 @@ const Sidebar = () => {
         <CommandGroup heading="Documents">
           <CommandItem>
             <Folder className="mr-2 h-4 w-4" /> {/* Use Folder instead of Folders */}
-            <Link href='#' >
+            <Link href='/employees/upload_documents/' >
                 Upload Documents
             </Link>
           </CommandItem>
