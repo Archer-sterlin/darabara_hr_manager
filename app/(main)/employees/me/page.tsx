@@ -209,7 +209,7 @@ const HRProfile: React.FC = () => {
           <ProfileForm user={user}/>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 whitespace-nowrap">
             <BankInfoForm bankInfo={bankInfo} />
-            <PasswordForm id={profile?.user.id}/>
+            <PasswordForm username={profile?.user.email}/>
           </div>
         </div>
       </div>
