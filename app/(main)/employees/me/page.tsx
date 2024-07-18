@@ -7,9 +7,7 @@ import PasswordForm from "../components/PasswordForm";
 import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
 import { fetchEmployeeData, axiosInstance } from "@/services/employees";
-import default_profile_pic from '@/img/default_profile_pic.png'
-
-
+import default_profile_pic from '@/img/default_profile_pic.png';
 
 const HRProfile: React.FC = () => {
   const router = useRouter();
@@ -18,29 +16,32 @@ const HRProfile: React.FC = () => {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [counter, setCounter] = useState(0);
   const [profile, setProfile] = useState<any>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("access");
-    if (!token) {
-      router.push("/auth");
-      return;
-    }
-  
-    try {
-      const decoded: any = jwt_decode(token);
-      if (!decoded) {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem("access");
+      if (!token) {
         router.push("/auth");
-      } else {
-        setAuthenticated(true);
-        fetchProfileData(); // Call fetchProfileData directly here
+        return;
       }
-    } catch (error) {
-      console.error("Invalid token:", error);
-      router.push("/auth");
+    
+      try {
+        const decoded: any = jwt_decode(token);
+        if (!decoded) {
+          router.push("/auth");
+        } else {
+          setAuthenticated(true);
+          setToken(token);
+          fetchProfileData();
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+        router.push("/auth");
+      }
     }
-  }, [router]); // Include router in the dependency array
-  
-  // Move fetchProfileData outside of useEffect
+  }, [router]);
+
   const fetchProfileData = async () => {
     try {
       const employeeData = await fetchEmployeeData();
@@ -50,7 +51,6 @@ const HRProfile: React.FC = () => {
       router.push("/auth");
     }
   };
-  
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
@@ -67,32 +67,35 @@ const HRProfile: React.FC = () => {
       }
     };
   }, [clockedIn, startTime]);
-  const token = localStorage.getItem("access")
+
   const handleClockIn = async () => {
-    setClockedIn(true);
-    setStartTime(new Date());
-    let res = await axiosInstance.get("/employees/clock_in",{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.status === 200){
-      localStorage.setItem("attendance_id", res.data.id)
+    if (token) {
+      setClockedIn(true);
+      setStartTime(new Date());
+      let res = await axiosInstance.get("/employees/clock_in", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        localStorage.setItem("attendance_id", res.data.id);
+      }
     }
   };
 
   const handleClockOut = async () => {
-    setClockedIn(false);
-    setCounter(0);
-    setStartTime(null);
-    // Add your clock-out API call here
-    let res = await axiosInstance.get(`/employees/clock_out/${localStorage.getItem("attendance_id")}`,{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.status === 200){
-      localStorage.removeItem("attendance_id")
+    if (token) {
+      setClockedIn(false);
+      setCounter(0);
+      setStartTime(null);
+      let res = await axiosInstance.get(`/employees/clock_out/${localStorage.getItem("attendance_id")}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        localStorage.removeItem("attendance_id");
+      }
     }
   };
 
@@ -106,7 +109,7 @@ const HRProfile: React.FC = () => {
   if (!authenticated || !profile) {
     return null;
   }
- 
+
   const bankInfo = {
     bank_code: profile?.bank_code,
     bank_name: profile?.bank_name,
@@ -123,8 +126,8 @@ const HRProfile: React.FC = () => {
     address: profile?.user?.address,
     gender: profile?.user?.gender,
     date_of_birth: profile?.user?.date_of_birth,
-    id: profile.id
-  }
+    id: profile.id,
+  };
 
   return (
     <div className="p-4">
@@ -214,10 +217,10 @@ const HRProfile: React.FC = () => {
           </div>
         </div>
         <div className="w-full flex flex-col gap-8 whitespace-nowrap">
-          <ProfileForm user={user}/>
+          <ProfileForm user={user} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 whitespace-nowrap">
             <BankInfoForm bankInfo={bankInfo} />
-            <PasswordForm username={profile?.user.email}/>
+            <PasswordForm username={profile?.user.email} />
           </div>
         </div>
       </div>
