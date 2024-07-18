@@ -7,6 +7,8 @@ import PasswordForm from "../components/PasswordForm";
 import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
 import { fetchEmployeeData, axiosInstance } from "@/services/employees";
+import default_profile_pic from '@/img/default_profile_pic.png'
+
 
 
 const HRProfile: React.FC = () => {
@@ -23,21 +25,22 @@ const HRProfile: React.FC = () => {
       router.push("/auth");
       return;
     }
-
+  
     try {
       const decoded: any = jwt_decode(token);
       if (!decoded) {
         router.push("/auth");
       } else {
         setAuthenticated(true);
-        fetchProfileData();
+        fetchProfileData(); // Call fetchProfileData directly here
       }
     } catch (error) {
       console.error("Invalid token:", error);
       router.push("/auth");
     }
-  }, []);
-
+  }, [router]); // Include router in the dependency array
+  
+  // Move fetchProfileData outside of useEffect
   const fetchProfileData = async () => {
     try {
       const employeeData = await fetchEmployeeData();
@@ -47,6 +50,7 @@ const HRProfile: React.FC = () => {
       router.push("/auth");
     }
   };
+  
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
@@ -129,7 +133,7 @@ const HRProfile: React.FC = () => {
           <div className="p-4 h-fit rounded-lg shadow bg-white dark:bg-gray-800">
             <div className="w-32 h-32 rounded-full mx-auto">
               <Image
-                src={profile.profile_picture}
+                src={profile.profile_picture || default_profile_pic}
                 alt="profile picture."
                 width={100}
                 height={100}

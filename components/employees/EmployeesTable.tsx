@@ -28,7 +28,7 @@ const EmployeesTable: React.FC<EmployeesTableProps> = ({ limit, title }) => {
       try {
         const employeesData = await fetchAllEmployees();
         setEmployees(employeesData.data?.results);
-        console.log(employees)
+       
       } catch (error) {
         console.error("Error fetching employees:", error);
       }

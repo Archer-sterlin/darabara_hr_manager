@@ -1,20 +1,30 @@
 'use client';
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import ProfileForm from "../../components/CompanyProfileForm";
-import ViewBankInfoForm from "../../components/ViewBankInfoForm ";
+import ViewBankInfoForm from "../../components/ViewBankInfoForm";
 import SalaryForm from "../../components/SalaryForm";
 import { useRouter } from 'next/navigation';
 import jwt_decode from 'jwt-decode';
 import { fetchEmployeeData } from "@/services/employees";
-
+import default_profile_pic from '@/img/default_profile_pic.png'
 
 
 const HRProfile: React.FC = () => {
   const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
   const [profile, setProfile] = useState<any>(null);
+
+  const fetchProfileData = useCallback(async (id: any) => {
+    try {
+      const employeeData = await fetchEmployeeData(id);
+      console.log("Fetched employee data:", employeeData.data);
+      setProfile(employeeData.data);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+      router.push("/auth");
+    }
+  }, [router]);
 
   useEffect(() => {
     const token = localStorage.getItem("access");
@@ -33,22 +43,10 @@ const HRProfile: React.FC = () => {
       }
     } catch (error) {
       console.error("Invalid token:", error);
-      localStorage.removeItem("access")
+      localStorage.removeItem("access");
       router.push("/auth");
     }
-  }, [router]);
-
-  const fetchProfileData = async (id:any) => {
-    try {
-      const employeeData = await fetchEmployeeData(id);
-      console.log("Fetched employee data:", employeeData.data);
-      setProfile(employeeData.data);
-    } catch (error) {
-      console.error("Error fetching employee data:", error);
-      router.push("/auth");
-    }
-  };
-
+  }, [router, fetchProfileData]);
 
   if (!authenticated || !profile) {
     return null; // Render nothing while authentication is being checked
@@ -67,7 +65,7 @@ const HRProfile: React.FC = () => {
     work_location: profile.work_location,
     employment_type: profile.employment_type,
     manager: `${profile.manager?.user?.first_name} ${profile.manager?.user?.last_name}`,
-    id: profile.id
+    id: profile.id,
   };
 
   const salary = {
@@ -85,7 +83,7 @@ const HRProfile: React.FC = () => {
           <div className="p-4 h-fit rounded-lg shadow bg-white dark:bg-gray-800">
             <div className="w-32 h-32 rounded-full mx-auto">
               <Image
-                src={profile.profile_picture}
+                src={profile.profile_picture || default_profile_pic}
                 alt="sample profile picture."
                 width={100}
                 height={100}

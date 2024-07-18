@@ -19,8 +19,8 @@ const Sidebar = () => {
         <CommandGroup heading="Suggestions">
           <CommandItem>
             <Calendar className="mr-2 h-4 w-4" />
-            <Link href='#'>
-              Calendar
+            <Link href='/employees/leave'>
+              Leave
             </Link>
           </CommandItem>
           <CommandItem>

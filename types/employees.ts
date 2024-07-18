@@ -1,5 +1,7 @@
 // types/employees.ts
 
+import { StaticImageData } from "next/image";
+
 export interface User {
     id: string;
     username: string;
@@ -47,6 +49,16 @@ export interface SalaryDetails {
     
 }
   
+export interface LeaveRecord {
+ id: string | null;
+ leave_type:string;
+ purpose:string;
+ start_date:string;
+ end_date:string;
+ status:string |  null;
+}
+
+
   export interface Employee {
     id: string;
     employee_id: string;
@@ -65,11 +77,12 @@ export interface SalaryDetails {
     means_of_identification: string | null;
     means_of_identification_type: string;
     mode_of_identification: string | null;
-    profile_picture: string | null;
+    profile_picture: string | any;
     skills: string[] | null;
     status: string;
     updated_at: string; // Consider using Date type if it's always in a consistent format
     user: User;
+    leave_records:Array<LeaveRecord>;
   }
   
 
