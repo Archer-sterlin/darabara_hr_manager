@@ -198,7 +198,7 @@ const EmployeeLeavePage = ({ params }: EmployeeLeavePageProp) => {
           </Button>
         </form>
       </Form>
-      {profile && <EmployeeLeaveTable profile={profile} />}
+      {profile && <EmployeeLeaveTable employeeId={profile.id} />}
     </>
   );
 };

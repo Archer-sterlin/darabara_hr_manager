@@ -1,14 +1,40 @@
 'use client';
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Employee, LeaveRecord } from '@/types/employees';
+import { axiosInstance } from '@/services/employees';
+import { LeaveRecord } from '@/types/employees';
 
 interface EmployeeLeaveTableProps {
-  profile: Employee;
+  employeeId: string;
 }
 
-const EmployeeLeaveTable: React.FC<EmployeeLeaveTableProps> = ({ profile }) => {
+const EmployeeLeaveTable: React.FC<EmployeeLeaveTableProps> = ({ employeeId }) => {
+  const [leaves, setLeaves] = useState<LeaveRecord[]>([]);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAllLeaveData = async () => {
+      try {
+        const leaveData = await axiosInstance.get('/leave/');
+        setLeaves(leaveData.data?.results);
+      } catch (error) {
+        console.error("Error fetching leaves:", error);
+      }
+    };
+
+    fetchAllLeaveData();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('access'));
+    }
+  }, []);
+
+  const filteredLeaves = leaves.filter(leave => leave.employee.id === employeeId);
+
   return (
     <div className="mt-10">
       <h3 className="text-2xl mb-4 font-semibold">Employee Leave History</h3>
@@ -26,18 +52,18 @@ const EmployeeLeaveTable: React.FC<EmployeeLeaveTableProps> = ({ profile }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {profile?.leave_records?.map((leave: LeaveRecord) => (
+          {filteredLeaves.map((leave: LeaveRecord) => (
             <TableRow key={leave.id}>
               <TableCell>
                 <Link href={`/employees/leave/edit/${leave.id}`} className="hover:underline">
-                  {profile?.user?.first_name} {profile?.user?.last_name}
+                  {leave.employee.user.first_name} {leave.employee.user.last_name}
                 </Link>
               </TableCell>
-              <TableCell>{leave?.leave_type}</TableCell>
-              <TableCell className="hidden md:table-cell">{leave?.purpose}</TableCell>
-              <TableCell className="hidden md:table-cell">{leave?.start_date}</TableCell>
-              <TableCell className="hidden md:table-cell">{leave?.end_date}</TableCell>
-              <TableCell className="hidden md:table-cell">{leave?.status}</TableCell>
+              <TableCell>{leave.leave_type}</TableCell>
+              <TableCell className="hidden md:table-cell">{leave.purpose}</TableCell>
+              <TableCell className="hidden md:table-cell">{leave.start_date}</TableCell>
+              <TableCell className="hidden md:table-cell">{leave.end_date}</TableCell>
+              <TableCell className="hidden md:table-cell">{leave.status}</TableCell>
               <TableCell>
                 <Link href={`/employees/leave/edit/${leave.id}`}>
                   <button className="bg-cyan-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs">
