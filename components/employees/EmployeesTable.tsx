@@ -38,6 +38,7 @@ const EmployeesTable: React.FC<EmployeesTableProps> = ({ limit, title }) => {
   }, []);
 
   // Sorting employees by date joined
+  console.log(employees)
   const sortedEmployees = [...employees].sort(
     (a, b) => new Date(b.date_joined).getTime() - new Date(a.date_joined).getTime()
   );
