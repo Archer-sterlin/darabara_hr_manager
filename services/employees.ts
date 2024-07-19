@@ -19,9 +19,10 @@ export const fetchAllEmployees = async () => {
       throw new Error('No access token found');
     }
 
-    const response = await axiosInstance.get('/employees', {
+    const response = await axiosInstance.get('/employees/', {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       }
     });
     return response.data;  // Assuming your API returns data directly
