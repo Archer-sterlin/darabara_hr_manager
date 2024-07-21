@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import jwt_decode from 'jwt-decode';
 import { fetchEmployeeData } from "@/services/employees";
 import default_profile_pic from '@/img/default_profile_pic.png'
+import { EmergencyContact, SalaryDetails } from "@/types/employees";
 
 
 const HRProfile: React.FC = () => {
@@ -67,13 +68,14 @@ const HRProfile: React.FC = () => {
     manager: `${profile.manager?.user?.first_name} ${profile.manager?.user?.last_name}`,
     id: profile.id,
   };
+  const current_salary: SalaryDetails = profile?.salary_details?.find((salary: SalaryDetails) => salary.is_current);
 
   const salary = {
-    base_salary: 2300,
-    pay_grade: "level 16",
-    tax_deductions: 23.4,
-    other_deductions: 12.9,
-    net_salary: 3000,
+    base_salary: current_salary?.base_salary,
+    pay_grade: current_salary?.pay_grade,
+    tax_deductions: current_salary?.tax_deductions,
+    other_deductions: current_salary?.other_deductions,
+    net_salary: current_salary?.net_salary,
   };
 
   return (
@@ -125,7 +127,7 @@ const HRProfile: React.FC = () => {
           <div className="p-4 rounded-lg shadow bg-white dark:bg-gray-800">
             <h2 className="font-bold text-center text-slate-500 dark:text-slate-200 text-lg pb-8">Emergency Contact</h2>
             <div className="space-y-4 px-4">
-              {profile.emergency_contacts?.map((contact: any) => (
+              {profile.emergency_contacts?.map((contact: EmergencyContact) => (
                 <div key={contact.id}>
                   <div className="flex justify-between items-center border-b pb-1 whitespace-nowrap">
                     <p className="font-semibold text-slate-500 dark:text-slate-200 mr-4 flex-shrink-0">Name:</p>
@@ -152,7 +154,7 @@ const HRProfile: React.FC = () => {
           <ProfileForm employee={employee} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 whitespace-nowrap">
             <ViewBankInfoForm bankInfo={bankInfo} />
-            <SalaryForm salary={salary} />
+            <SalaryForm salary={salary} id={current_salary?.id} />
           </div>
         </div>
       </div>

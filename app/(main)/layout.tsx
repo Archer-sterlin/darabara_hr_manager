@@ -10,32 +10,32 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     const token = localStorage.getItem('access');
-    //     if (!token) {
-    //         router.push('/auth');
-    //         return;
-    //     }
+    useEffect(() => {
+        const token = localStorage.getItem('access');
+        if (!token) {
+            router.push('/auth');
+            return;
+        }
 
-    //     try {
-    //         const decoded = jwt_decode(token);
-    //         if (!decoded) {
-    //             router.push('/auth');
-    //             return;
-    //         }
-    //         // Optionally, you can perform additional checks on the decoded token
+        try {
+            const decoded = jwt_decode(token);
+            if (!decoded) {
+                router.push('/auth');
+                return;
+            }
+            // Optionally, you can perform additional checks on the decoded token
 
-    //         setIsLoggedIn(true);
-    //     } catch (error) {
-    //         console.error('Invalid token:', error);
-    //         router.push('/auth');
-    //     }
-    // }, [router]);
+            setIsLoggedIn(true);
+        } catch (error) {
+            console.error('Invalid token:', error);
+            router.push('/auth');
+        }
+    }, [router]);
 
-    // if (!isLoggedIn) {
-    //     // Optionally, you can show a loading spinner or a message while checking authentication
-    //     return null;
-    // }
+    if (!isLoggedIn) {
+        // Optionally, you can show a loading spinner or a message while checking authentication
+        return null;
+    }
 
     return (
         <>

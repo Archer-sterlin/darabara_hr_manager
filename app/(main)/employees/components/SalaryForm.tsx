@@ -1,5 +1,7 @@
 'use client';
 
+import { toast } from "@/components/ui/use-toast";
+import { axiosInstance } from "@/services/employees";
 import React, { useState, ChangeEvent, MouseEvent } from "react";
 
 interface SalaryData {
@@ -12,9 +14,10 @@ interface SalaryData {
 
 interface SalaryFormProps {
   salary: SalaryData;
+  id: string;
 }
 
-const SalaryForm: React.FC<SalaryFormProps> = ({ salary }) => {
+const SalaryForm: React.FC<SalaryFormProps> = ({ salary, id }) => {
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [salaryData, setSalaryData] = useState<SalaryData>({
     base_salary: salary.base_salary || 0.00,
@@ -33,10 +36,41 @@ const SalaryForm: React.FC<SalaryFormProps> = ({ salary }) => {
     setIsEditable(!isEditable);
   };
 
-  const handleSaveClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleSaveClick = async (e: MouseEvent<HTMLButtonElement>) => {
     setIsEditable(false);
     // handle submit logic ... api call to submit the form
-    console.log(salaryData);
+    const token = localStorage.getItem('access');
+    if (!token) {
+      toast({
+        title: 'Error',
+        description: 'No access token found',
+      });
+      return;
+    }
+    try {
+      const res = await axiosInstance.put(`/salary/${id}/`, salaryData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.data.status) {
+        toast({
+          title: 'Salary details updated successfully',
+          description: 'Updated successfully',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Failed to update',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: `${error}`,
+      });
+    }
   };
 
   return (

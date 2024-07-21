@@ -17,6 +17,7 @@ export interface User {
   }
 
 export interface EmergencyContact {
+    id: string;
     name: string;
     gender: string;
     relationship: string;
@@ -37,7 +38,7 @@ export interface EmergencyContact {
   }
 
 export interface SalaryDetails {
-
+      id: string;
       base_salary: number;
       pay_grade: string;
       tax_deductions: number;

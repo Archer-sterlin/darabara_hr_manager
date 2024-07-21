@@ -33,7 +33,7 @@ const EmployeeLeaveTable: React.FC<EmployeeLeaveTableProps> = ({ employeeId }) =
     }
   }, []);
 
-  const filteredLeaves = leaves.filter(leave => leave.employee.id === employeeId);
+  const filteredLeaves = leaves?.filter(leave => leave.employee.id === employeeId);
 
   return (
     <div className="mt-10">
@@ -52,7 +52,7 @@ const EmployeeLeaveTable: React.FC<EmployeeLeaveTableProps> = ({ employeeId }) =
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredLeaves.map((leave: LeaveRecord) => (
+          {filteredLeaves?.map((leave: LeaveRecord) => (
             <TableRow key={leave.id}>
               <TableCell>
                 <Link href={`/employees/leave/edit/${leave.id}`} className="hover:underline">

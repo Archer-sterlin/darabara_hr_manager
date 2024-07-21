@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import ProfileForm from "../components/ProfileForm";
 import BankInfoForm from "../components/BankInfoForm";
@@ -17,6 +17,16 @@ const HRProfile: React.FC = () => {
   const [counter, setCounter] = useState(0);
   const [profile, setProfile] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
+
+  const fetchProfileData = useCallback(async () => {
+    try {
+      const employeeData = await fetchEmployeeData();
+      setProfile(employeeData.data);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+      router.push("/auth");
+    }
+  }, [router]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -40,17 +50,7 @@ const HRProfile: React.FC = () => {
         router.push("/auth");
       }
     }
-  }, [router]);
-
-  const fetchProfileData = async () => {
-    try {
-      const employeeData = await fetchEmployeeData();
-      setProfile(employeeData.data);
-    } catch (error) {
-      console.error("Error fetching employee data:", error);
-      router.push("/auth");
-    }
-  };
+  }, [router, fetchProfileData]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;

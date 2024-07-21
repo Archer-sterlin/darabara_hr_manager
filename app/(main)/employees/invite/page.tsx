@@ -16,7 +16,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/components/ui/use-toast';
-import axios from 'axios';
+import { axiosInstance } from '@/services/employees';
+import { Employee, SalaryDetails } from '@/types/employees';
 
 interface EmployeeEditPageProp {
   params: {
@@ -64,7 +65,55 @@ const formSchema = z.object({
   last_promotion: z.string().min(3, {
     message: 'Last promotion must be at least 3 characters long'
   }),
+  base_salary: z.number(),
+  pay_grade: z.string(),
+  tax_deductions: z.number(),
+  other_deductions: z.number(),
+  net_salary: z.number(),
 });
+
+
+interface FormData {
+  first_name: string;
+  last_name: string;
+  mobile: string;
+  email: string;
+  role: string;
+  employment_type: string;
+  job_title: string;
+  job_description: string;
+  department_name: string;
+  department_description: string;
+  manager: string;
+  work_location: string;
+  last_promotion: string;
+  base_salary?: number; 
+  pay_grade?: string; 
+  tax_deductions?: number; 
+  other_deductions?: number; 
+  net_salary?: number; 
+}
+
+function extractAndCreateObjects(originalObject: FormData) {
+  const {
+    base_salary,
+    pay_grade,
+    tax_deductions,
+    other_deductions,
+    net_salary
+  } = originalObject;
+
+  const salaryObj = { base_salary, pay_grade, tax_deductions, other_deductions, net_salary  };
+ 
+
+  delete originalObject.base_salary;
+  delete originalObject.pay_grade;
+  delete originalObject.tax_deductions;
+  delete originalObject.other_deductions;
+  delete originalObject.net_salary;
+
+  return { salaryObj, originalObject };
+}
 
 const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
   const { toast } = useToast();
@@ -74,14 +123,21 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
   });
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
- 
+    
     const token = localStorage.getItem('access');
-    const res = await axios.post('https://chile64.pythonanywhere.com/api/v1/auth/invite/', data,  {
+    const {salaryObj, originalObject} = extractAndCreateObjects(data); 
+    
+    const res_user_invite = await axiosInstance.post('/invite/', originalObject,  {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     } );
-    if (res.data.status) {
+    const res_salary = await axiosInstance.post('/salary/', salaryObj,  {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    } );
+    if (res_user_invite.data.status) {
       toast({
         title: 'Invite successfully',
         description: `Updated by ${data.first_name} ${data.last_name}`,
@@ -361,6 +417,105 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
                   <Input
                     className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
                     placeholder='Enter Last Promotion'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='base_salary'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Base salary
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Base salary'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name='pay_grade'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Pay grade
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Pay Grade'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name='tax_deductions'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                Tax Deductions
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Tax Deduction'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name='other_deductions'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Other Deductions
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Other Deductions'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name='net_salary'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-white'>
+                  Net Salary
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
+                    placeholder='Enter Net Salary'
                     {...field}
                   />
                 </FormControl>

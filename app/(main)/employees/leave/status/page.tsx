@@ -95,9 +95,7 @@ const EmployeeStatusPage = () => {
     <>
       <BackButton text="Back To Employees list" link="/" />
       <h3 className="text-2xl mb-4">Employee Leave status update</h3>
-      {leaves
-        .filter(leave => leave.status === 'pending')
-        .map(leave => {
+      {leaves?.filter(leave => leave.status === 'pending')?.map(leave => {
           return (
             <FormProvider key={leave.id} {...methods}>
               <form onSubmit={handleSubmit(data => onSubmit({ ...data, leaveId: leave.id || '' }))}>
