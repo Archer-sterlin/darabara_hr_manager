@@ -2,7 +2,7 @@
 
 import { toast } from '@/components/ui/use-toast';
 import { axiosInstance } from '@/services/employees';
-import React, { useState, ChangeEvent, MouseEvent } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 
 interface UserDetails {
   first_name: string;
@@ -97,11 +97,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
             {field.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
           </label>
           <input
-            type={field === 'email' ? 'email' : 'text'}
+            type={field === 'date_of_birth' ? 'date' : field === 'email' ? 'email' : 'text'}
             name={field}
             value={formData.user[field as keyof typeof formData.user]}
             onChange={handleChange}
             disabled={!isEditable}
+            placeholder={field === 'date_of_birth' ? 'yy-m-d' : ''}
             className="w-10/12 p-2 disabled:text-slate-500 dark:bg-slate-950 ring-0 border-0 outline-0 focus:ring-0 focus:border-0 focus:outline-0 text-right"
           />
         </div>
