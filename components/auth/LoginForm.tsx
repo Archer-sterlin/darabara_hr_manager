@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { axiosInstance } from '@/services/employees';
 
 const formSchema = z.object({
   username: z.string().min(3, {
@@ -33,7 +34,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (form_data: z.infer<typeof formSchema>) => {
     try {
-      const { data } = await axios.post('https://chile64.pythonanywhere.com/api/v1/auth/login/', form_data);
+      const { data } = await axiosInstance.post('/auth/login/', form_data);
       if (data.token.access) {
   
         localStorage.setItem('access', data.token.access);

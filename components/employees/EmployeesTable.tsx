@@ -1,6 +1,4 @@
 'use client';
-// components/EmployeesTable.tsx
-
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -27,10 +25,16 @@ const EmployeesTable: React.FC<EmployeesTableProps> = ({ limit, title }) => {
     const fetchEmployees = async () => {
       try {
         const employeesData = await fetchAllEmployees();
-        setEmployees(employeesData.data?.results);
-       
+        // Ensure the data is an array
+        if (Array.isArray(employeesData.data?.results)) {
+          setEmployees(employeesData.data.results);
+        } else {
+          console.error("Unexpected API response:", employeesData);
+          setEmployees([]); // Set an empty array if data is not as expected
+        }
       } catch (error) {
         console.error("Error fetching employees:", error);
+        setEmployees([]); // Set an empty array on error
       }
     };
 
@@ -38,7 +42,6 @@ const EmployeesTable: React.FC<EmployeesTableProps> = ({ limit, title }) => {
   }, []);
 
   // Sorting employees by date joined
-  console.log(employees)
   const sortedEmployees = [...employees].sort(
     (a, b) => new Date(b.date_joined).getTime() - new Date(a.date_joined).getTime()
   );
@@ -67,7 +70,7 @@ const EmployeesTable: React.FC<EmployeesTableProps> = ({ limit, title }) => {
             <TableRow key={employee.id}>
               <TableCell>
                 <Link href={`/employees/edit/${employee.id}`} className="hover:underline">
-                    {employee?.user?.first_name} {employee?.user?.last_name}
+                  {employee?.user?.first_name} {employee?.user?.last_name}
                 </Link>
               </TableCell>
               <TableCell>{employee.job_title?.title}</TableCell>
@@ -77,10 +80,9 @@ const EmployeesTable: React.FC<EmployeesTableProps> = ({ limit, title }) => {
               <TableCell className="hidden md:table-cell text-right">{employee.date_joined}</TableCell>
               <TableCell>
                 <Link href={`/employees/edit/${employee.id}`}>
-                    <button className="bg-cyan-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs">
-                      Edit
-                    </button>
-            
+                  <button className="bg-cyan-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs">
+                    Edit
+                  </button>
                 </Link>
               </TableCell>
             </TableRow>
