@@ -16,7 +16,11 @@ import {
 import ThemeToggle from "./ThemeToggler";
 import { useRouter } from "next/navigation";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onToggleSidebar: () => void; // Accept a prop for toggling the sidebar
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -42,11 +46,20 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <div className="bg-primary dark:bg-slate-700 text-white py-2 px-5 flex justify-between">
+    <div className="bg-primary dark:bg-slate-700 text-white py-2 px-5 flex justify-between items-center">
       <Link href="/">
         <Image src={logo} alt="DARABARA HR Manager" width={100} height={60} />
       </Link>
-      <div className="flex items-center">
+      <div className="flex items-center md:hidden">
+        <button
+          onClick={onToggleSidebar}
+          className="focus:outline-none p-2"
+          aria-label="Toggle Sidebar"
+        >
+          ☰
+        </button>
+      </div>
+      <div className="hidden md:flex items-center">
         <ThemeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none">
@@ -64,7 +77,6 @@ const Navbar: React.FC = () => {
             <DropdownMenuItem onClick={handleLogout}>
               Logout
             </DropdownMenuItem>
-            
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

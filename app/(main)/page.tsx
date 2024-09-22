@@ -4,6 +4,7 @@ import {User, CreditCard} from "lucide-react";
 import EmployeesTable from "@/components/employees/EmployeesTable";
 import Link from "next/link";
 
+
 export default function Home() {
   return (
     <>

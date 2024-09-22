@@ -30,13 +30,13 @@ interface EmployeeEditPageProp {
 }
 
 const formSchema = z.object({
-  means_of_identification: z.instanceof(File).optional(),
-  dbs: z.instanceof(File).optional(),
-  trainings: z.instanceof(File).optional(),
-  resume: z.instanceof(File).optional(),
-  right_to_work: z.instanceof(File).optional(),
-  means_of_identification_type: z.string().min(3, {
-    message: 'Means of identification type must be at least 3 characters long',
+  means_of_identification: z.any().optional(),
+  dbs: z.any().optional(),
+  trainings: z.any().optional(),
+  resume: z.any().optional(),
+  right_to_work: z.any().optional(),
+  means_of_identification_type: z.string().min(2, {
+    message: 'Means of identification type must be at least 2 characters long',
   }),
 });
 
@@ -49,10 +49,10 @@ const DocumentUploadPage = ({ params }: EmployeeEditPageProp) => {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-      if (value instanceof FileList) {
+      if (value instanceof FileList && value.length > 0) {
         formData.append(key, value[0]);
       } else if (value) {
-        formData.append(key, value);
+        formData.append(key, value as string);
       }
     });
 
@@ -137,7 +137,7 @@ const DocumentUploadPage = ({ params }: EmployeeEditPageProp) => {
                 <FormControl>
                   <Input
                     type='file'
-                    accept='image/*,application/pdf'
+                    accept='application/pdf'
                     className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
                     onChange={(e) => field.onChange(e.target.files)}
                   />
@@ -157,7 +157,7 @@ const DocumentUploadPage = ({ params }: EmployeeEditPageProp) => {
                 <FormControl>
                   <Input
                     type='file'
-                    accept='image/*,application/pdf'
+                    accept='application/pdf'
                     className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
                     onChange={(e) => field.onChange(e.target.files)}
                   />
@@ -177,7 +177,7 @@ const DocumentUploadPage = ({ params }: EmployeeEditPageProp) => {
                 <FormControl>
                   <Input
                     type='file'
-                    accept='image/*,application/pdf'
+                    accept='application/pdf'
                     className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
                     onChange={(e) => field.onChange(e.target.files)}
                   />
@@ -197,7 +197,7 @@ const DocumentUploadPage = ({ params }: EmployeeEditPageProp) => {
                 <FormControl>
                   <Input
                     type='file'
-                    accept='image/*,application/pdf'
+                    accept='application/pdf'
                     className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
                     onChange={(e) => field.onChange(e.target.files)}
                   />
@@ -217,7 +217,7 @@ const DocumentUploadPage = ({ params }: EmployeeEditPageProp) => {
                 <FormControl>
                   <Input
                     type='file'
-                    accept='image/*,application/pdf'
+                    accept='application/pdf'
                     className='bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0'
                     onChange={(e) => field.onChange(e.target.files)}
                   />

@@ -50,15 +50,13 @@ const formSchema = z.object({
   job_description: z.string().min(3, {
     message: 'Job description must be at least 3 characters long'
   }),
-  department_name: z.string().min(3, {
-    message: 'Department name must be at least 3 characters long'
+  department_name: z.string().min(1, {
+    message: 'Department name must be at least 2 characters long'
   }),
   department_description: z.string().min(3, {
     message: 'Department description must be at least 3 characters long'
   }),
-  manager: z.string().min(9, {
-    message: 'Invalid mobile number'
-  }),
+  manager: z.string(),
   work_location: z.string().min(3, {
     message: 'Work location must be at least 3 characters long'
   }),
@@ -158,7 +156,7 @@ const EmployeeInvitePage = ({ params }: EmployeeEditPageProp) => {
   return (
     <>
       <BackButton text='Back To Employees list' link='/employees' />
-      <h3 className='text-2xl mb-4'>Edit Profile</h3>
+      <h3 className='text-2xl mb-4'>Register Employee</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-8'>
           <FormField

@@ -13,6 +13,7 @@ import { LayoutDashboard, User, Settings, Calendar, Folder } from "lucide-react"
 
 
 const Sidebar = () => {
+  
   return ( 
     <Command className="bg-secondary rounded-none">
       <CommandList>
